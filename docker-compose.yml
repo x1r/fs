@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: company_services_db
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      - db
+    restart: on-failure
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+
+#
+#  frontend:
+#    platform: "linux/amd64"
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#      args:
+#        NEXT_PUBLIC_CLIENTVAR: "clientvar"
+#      target: dev
+#    working_dir: /app
+#    ports:
+#      - "3000:3000"
+#    image: t3-app
+#    environment:
+#      - DATABASE_URL=postgresql://postgres:password@db:5432/company_services_db
+#      - WATCHFILES_FORCE_POLLING=true
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend:/var/www/frontend
+    depends_on:
+      - backend
+
+
+volumes:
+  db:

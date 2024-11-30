@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JetClientState">
+    <option name="draftsState">
+      <draftsState>
+        <option name="requests">
+          <list>
+            <requestState>
+              <option name="body">
+                <bodyState>
+                  <option name="raw" value="{&#10;  &quot;username&quot;: &quot;test@x1r.dev&quot;,&#10;  &quot;password&quot;: &quot;password&quot;&#10;}" />
+                  <option name="type" value="JSON" />
+                </bodyState>
+              </option>
+              <option name="id" value="b5b72d1f-85b5-44dc-bee8-548acc6de70a" />
+              <option name="method" value="POST" />
+              <option name="name" value="Register_user" />
+              <option name="url" value="http://127.0.0.1:8000/users" />
+            </requestState>
+            <requestState>
+              <option name="body">
+                <bodyState>
+                  <option name="type" value="FORM_URL_ENCODED" />
+                  <option name="urlEncoded">
+                    <list>
+                      <urlEncodedParameterState>
+                        <option name="key" value="username" />
+                        <option name="value" value="test@x1r.dev" />
+                      </urlEncodedParameterState>
+                      <urlEncodedParameterState>
+                        <option name="key" value="password" />
+                        <option name="value" value="password" />
+                      </urlEncodedParameterState>
+                    </list>
+                  </option>
+                </bodyState>
+              </option>
+              <option name="id" value="a1a61693-0b08-4d04-9332-978efb2cd658" />
+              <option name="method" value="POST" />
+              <option name="name" value="Getting_token" />
+              <option name="url" value="http://localhost/api/login" />
+            </requestState>
+            <requestState>
+              <option name="auth">
+                <authState>
+                  <option name="bearer">
+                    <nE>
+                      <option name="token" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTczMjY1MzIzNn0.dxjeLMdXHKB0Fy3NMVXeN7ERNobJ91PrSyW8b7AQjxc" />
+                    </nE>
+                  </option>
+                  <option name="type" value="BEARER" />
+                </authState>
+              </option>
+              <option name="id" value="b874141e-647a-44db-9e82-e2893eb70883" />
+              <option name="method" value="GET" />
+              <option name="name" value="Me" />
+              <option name="url" value="http://127.0.0.1:8000/users/me/" />
+            </requestState>
+          </list>
+        </option>
+      </draftsState>
+    </option>
+    <option name="folders">
+      <list>
+        <folderState>
+          <option name="environmentGroups">
+            <list>
+              <environmentGroupState>
+                <option name="environments">
+                  <list>
+                    <environmentState>
+                      <option name="name" value="New Environment" />
+                    </environmentState>
+                  </list>
+                </option>
+                <option name="name" value="Default" />
+              </environmentGroupState>
+            </list>
+          </option>
+          <option name="folders">
+            <list>
+              <folderState>
+                <option name="id" value="d06652a4-ae51-43f0-afa3-599ec61fe92a" />
+                <option name="name" value="New Folder" />
+                <option name="sortWeight" value="1000000" />
+              </folderState>
+            </list>
+          </option>
+          <option name="id" value="c1ddbf46-d270-403a-b106-112181275406" />
+          <option name="name" value="lab2" />
+          <option name="selectedEnvironmentIds">
+            <map>
+              <entry key="default" />
+            </map>
+          </option>
+          <option name="syncProperties">
+            <synchronizationPropertiesState>
+              <option name="autoSync" value="true" />
+              <option name="folderPath" value="D:\lab2\.jetclient" />
+            </synchronizationPropertiesState>
+          </option>
+        </folderState>
+      </list>
+    </option>
+    <option name="id" value="c82fa680-ad56-4f8e-8dd5-76bd493cba4e" />
+    <option name="version" value="4" />
+  </component>
+</project>
