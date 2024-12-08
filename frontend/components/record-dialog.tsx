@@ -41,7 +41,7 @@ const RecordDialog = ({
                 </DialogHeader>
                 <div className="space-y-4">
                     {columns
-                        .filter((column) => column.accessorKey !== "id")
+                        .filter((column) => column.header!=="ID")
                         .map((column) => (
                             <div key={column.accessorKey}>
                                 <label htmlFor={column.accessorKey} className="block text-sm font-medium">

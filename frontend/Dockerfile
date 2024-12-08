@@ -58,26 +58,3 @@ EXPOSE 3000
 ENV PORT 3000
 
 CMD ["node", "server.js"]
-
-##### DEV
-
-FROM --platform=linux/amd64 node:18-alpine AS dev
-WORKDIR /app
-
-# Установка зависимостей для разработки
-RUN apk add --no-cache libc6-compat openssl
-COPY package.json pnpm-lock.yaml* ./
-RUN yarn global add pnpm && pnpm install
-
-# Копируем все файлы проекта
-COPY . .
-
-# Установка переменных окружения для разработки
-ENV NODE_ENV=development
-ENV PORT=2000
-
-# Открываем порт для разработки
-EXPOSE 2000
-
-# Команда для запуска режима разработки
-CMD ["pnpm", "dev"]

@@ -5,7 +5,6 @@ from sqlalchemy.orm import declarative_base, relationship
 Base = declarative_base()
 
 
-# Employee Model
 class Employee(Base):
     __tablename__ = "employees"
     employee_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -19,7 +18,6 @@ class Employee(Base):
     tasks = relationship("Task", back_populates="employee_relation")
 
 
-# Client Model
 class Client(Base):
     __tablename__ = "clients"
     client_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -33,7 +31,6 @@ class Client(Base):
     orders = relationship("Order", back_populates="client_relation")
 
 
-# Order Model
 class Order(Base):
     __tablename__ = "orders"
     order_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -48,7 +45,6 @@ class Order(Base):
     payments = relationship("Payment", back_populates="order_relation")
 
 
-# Warehouse Model
 class Warehouse(Base):
     __tablename__ = "warehouses"
     warehouse_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -59,7 +55,6 @@ class Warehouse(Base):
     equipments = relationship("Equipment", back_populates="warehouse_relation")
 
 
-# Equipment Model
 class Equipment(Base):
     __tablename__ = "equipments"
     equipment_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -73,7 +68,6 @@ class Equipment(Base):
     warehouse_relation = relationship("Warehouse", back_populates="equipments")
 
 
-# Task Model
 class Task(Base):
     __tablename__ = "tasks"
     task_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -86,7 +80,6 @@ class Task(Base):
     employee_relation = relationship("Employee", back_populates="tasks")
 
 
-# Payment Model
 class Payment(Base):
     __tablename__ = "payments"
     payment_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -97,7 +90,6 @@ class Payment(Base):
     order_relation = relationship("Order", back_populates="payments")
 
 
-# Пользователи
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)

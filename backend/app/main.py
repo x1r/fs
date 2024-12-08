@@ -1,5 +1,5 @@
 from typing import List
-
+import json
 from fastapi import FastAPI, Depends, status, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
@@ -28,16 +28,7 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-def role_required(allowed_roles: list[str]):
-    def role_checker(current_user: User = Depends(get_current_user)):
-        print(current_user.role)
-        if current_user.role not in allowed_roles:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have the required permissions."
-            )
-        return current_user
-    return role_checker
+
 
 
 def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=None):
@@ -47,16 +38,14 @@ def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=Non
     def create_item(
         item: schema_create,
         db: Session = Depends(get_db),
-        current_user: User = Depends(role_required(allowed_roles))
     ):
         return crud.create_entity(db=db, model=model, schema=item)
 
     @app.get(f"/{name}/", response_model=list[schema])
     def read_items(
         skip: int = 0,
-        limit: int = 10,
+        limit: int = 50,
         db: Session = Depends(get_db),
-        current_user: User = Depends(role_required(allowed_roles))
     ):
         return crud.get_entities(db=db, model=model, skip=skip, limit=limit)
 
@@ -64,7 +53,6 @@ def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=Non
     def read_item(
         item_id: int,
         db: Session = Depends(get_db),
-        current_user: User = Depends(role_required(allowed_roles))
     ):
         entity = crud.get_entity(db=db, model=model, entity_id=item_id)
         if not entity:
@@ -76,7 +64,6 @@ def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=Non
         item_id: int,
         item: schema_create,
         db: Session = Depends(get_db),
-        current_user: User = Depends(role_required(allowed_roles))
     ):
         updated = crud.update_entity(db=db, model=model, entity_id=item_id, schema=item)
         if not updated:
@@ -87,7 +74,6 @@ def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=Non
     def delete_item(
         item_id: int,
         db: Session = Depends(get_db),
-        current_user: User = Depends(role_required(allowed_roles))
     ):
         deleted = crud.delete_entity(db=db, model=model, entity_id=item_id)
         if not deleted:
@@ -95,7 +81,7 @@ def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=Non
         return {"message": f"{name.capitalize()} deleted successfully"}
 
 
-setup_crud_routes(app, "clients", models.Client, schemas.ClientRead, schemas.ClientCreate, ["manager", "admin"])
+# setup_crud_routes(app, "clients", models.Client, schemas.ClientRead, schemas.ClientCreate, ["manager", "admin"])
 setup_crud_routes(app, "orders", models.Order, schemas.OrderRead, schemas.OrderCreate, ["manager", "admin", "technician"])
 setup_crud_routes(app, "employees", models.Employee, schemas.EmployeeRead, schemas.EmployeeCreate, ["manager", "admin"])
 setup_crud_routes(app, "equipment", models.Equipment, schemas.EquipmentRead, schemas.EquipmentCreate, ["technician", "warehouse_staff", "manager", "admin"])
@@ -130,7 +116,19 @@ def get_warehouse_equipment(db: Session = Depends(get_db)):
     """).fetchall()
     return [dict(row) for row in result]
 
-
+@app.get("/audit-logs/")
+def get_audit_logs(db: Session = Depends(get_db)):
+    audit_logs = db.query(models.AuditLog).all()
+    return [
+        {
+            "operation": log.operation,
+            "table_name": log.table_name,
+            "changed_data": json.dumps(log.changed_data, indent=2),  # Преобразование в строку
+            "changed_by": log.changed_by,
+            "timestamp": log.timestamp.isoformat() if log.timestamp else None,
+        }
+        for log in audit_logs
+    ]
 
 # Регистрация пользователя
 @app.post("/register", response_model=schemas.UserRead)
@@ -175,6 +173,7 @@ def get_user_by_username(username: str, db: Session = Depends(get_db)):
         "is_active": user.is_active,
         "role": user.role
     }
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to API"}

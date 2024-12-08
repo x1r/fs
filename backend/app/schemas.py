@@ -2,6 +2,7 @@ from decimal import Decimal
 from pydantic import BaseModel
 from typing import List, Optional, Any, Dict
 from datetime import date, datetime
+import json
 
 
 # Employee Schema
@@ -154,6 +155,15 @@ class AuditLogBase(BaseModel):
     changed_data: Optional[Dict[str, Any]] = None
     changed_by: str
     timestamp: Optional[datetime] = None
+
+    def to_display_dict(self):
+        return {
+            "operation": self.operation,
+            "table_name": self.table_name,
+            "changed_data": json.dumps(self.changed_data, indent=2),  # Преобразуем в отформатированный JSON
+            "changed_by": self.changed_by,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+        }
 
 # Schema for creating a new audit log
 class AuditLogCreate(AuditLogBase):

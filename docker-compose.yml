@@ -23,7 +23,7 @@ services:
     environment:
       - WATCHFILES_FORCE_POLLING=true
 
-#
+
 #  frontend:
 #    platform: "linux/amd64"
 #    build:
@@ -31,7 +31,7 @@ services:
 #      dockerfile: Dockerfile
 #      args:
 #        NEXT_PUBLIC_CLIENTVAR: "clientvar"
-#      target: dev
+#      target: production
 #    working_dir: /app
 #    ports:
 #      - "3000:3000"
