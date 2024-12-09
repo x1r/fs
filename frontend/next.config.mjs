@@ -18,5 +18,8 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ['pbs.twimg.com'],
+  },
   output: "standalone",
 });

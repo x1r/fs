@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {AppSidebar} from "@/components/app-sidebar";
 import {DataTable} from "@/components/table/data-table";
-import {baseColumns, selectionColumn, actionsColumn} from "@/lib/tables-columns";
+import {actionsColumn, baseColumns, selectionColumn} from "@/lib/tables-columns";
 import {CRUD} from "@/src/utils/api";
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {Separator} from "@/components/ui/separator";
@@ -15,25 +15,28 @@ import {
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import RecordDialog from "@/components/record-dialog";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 
 const DashboardTable = () => {
-    const { data: session, status } = useSession();
+    // const {data: session, status} = useSession();
     const router = useRouter();
     const {table} = router.query;
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-
+    const [_loading, setLoading] = useState(false);
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
     const [currentData, setCurrentData] = useState<any>(null);
+    const [totalRows, setTotalRows] = useState(0);
 
-    if (status === "unauthenticated") {
-        router.push("/auth/login");
-        return null;
-    }
+    // if (status === "unauthenticated") {
+    //     router.push("/auth/login");
+    //     return null;
+    // }
 
     useEffect(() => {
+
         // @ts-ignore
         if (!table || !baseColumns[table]) return;
 
@@ -41,8 +44,15 @@ const DashboardTable = () => {
             setLoading(true);
             try {
                 // @ts-ignore
-                const data = await CRUD.getAll(table);
+                const data = await CRUD.getAll(table,
+                    {
+                        skip: pageIndex * pageSize,
+                        limit: pageSize,
+                    });
                 setData(data);
+                // @ts-ignore
+                const totalRows = await CRUD.getCount(table, {});
+                setTotalRows(totalRows);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             } finally {
@@ -51,15 +61,38 @@ const DashboardTable = () => {
         };
 
         fetchData().then(r => r);
-    }, [table]);
+    }, [table, pageIndex, pageSize]);
 
     // @ts-ignore
     if (!table || !baseColumns[table]) {
         return <p className="p-4">Table not found</p>;
     }
 
-    const handleDelete = (row: any) => {
-        console.log(`Delete ${table}:`, row);
+    const handleDelete = async (rowsToDelete: any[]) => {
+        if (!rowsToDelete || rowsToDelete.length === 0) {
+            console.error("No rows selected for deletion.");
+            return;
+        }
+
+        const tableName = Array.isArray(table) ? table[0] : table;
+
+        if (!tableName || typeof tableName !== "string") {
+            console.error("Invalid table name.");
+            return;
+        }
+
+        try {
+            const deletePromises = rowsToDelete.map((row) =>
+                CRUD.delete(tableName, row.id)
+            );
+            await Promise.all(deletePromises);
+            console.log(`Deleted ${rowsToDelete.length} row(s) successfully.`);
+
+            const refreshedData = await CRUD.getAll(tableName);
+            setData(refreshedData);
+        } catch (err) {
+            console.error("Failed to delete rows:", err);
+        }
     };
 
     const handleEdit = (row: any) => {
@@ -79,25 +112,22 @@ const DashboardTable = () => {
             if (dialogMode === "edit") {
                 console.log(`Editing ${table}:`, formData);
 
-                // Ensure the edited row ID exists
                 if (!formData.id) {
                     console.error("Edit operation requires an entity ID.");
                     return;
                 }
 
-                await CRUD.update(table, formData.id, formData); // Use the correct ID from formData
+                await CRUD.update(table, formData.id, formData);
                 console.log(`Entity updated successfully in ${table}.`);
             } else {
                 console.log(`Adding to ${table}:`, formData);
 
-                await CRUD.create(table, formData); // Use `formData` for creating a new entity
+                await CRUD.create(table, formData);
                 console.log(`Entity added successfully to ${table}.`);
             }
 
             setIsDialogOpen(false);
 
-            // Refresh table data
-            // @ts-ignore
             const refreshedData = await CRUD.getAll(table);
             setData(refreshedData);
         } catch (err) {
@@ -141,7 +171,14 @@ const DashboardTable = () => {
                         columns={columns}
                         data={data}
                         onAdd={handleAdd}
-                        onDelete={handleDelete}
+                        onDelete={(rows) => handleDelete(rows)}
+                        onPaginationChange={({pageIndex, pageSize}) => {
+                            setPageIndex(pageIndex);
+                            setPageSize(pageSize);
+                        }}
+                        pageIndex={pageIndex}
+                        pageSize={pageSize}
+                        totalRows={totalRows}
                     />
 
                     {isDialogOpen && (

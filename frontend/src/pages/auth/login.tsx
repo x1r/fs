@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { signIn } from "next-auth/react";
+import {useState} from "react";
+import {useRouter} from "next/router";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {signIn} from "next-auth/react";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {Label} from "@/components/ui/label";
 
 const LoginPage = () => {
-    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [credentials, setCredentials] = useState({username: "", password: ""});
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
@@ -29,33 +29,35 @@ const LoginPage = () => {
     };
 
     return (
-        <Card className="mx-auto max-w-sm my-auto">
-            <CardHeader>
-                <CardTitle className="text-2xl">Login</CardTitle>
-                <CardDescription>
-                    Enter your email below to login to your account
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid gap-4">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            placeholder="mail@example.com"
-                            value={credentials.username}
-                            required
-                            onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Input
-                            placeholder="Password"
-                            type="password"
-                            required
-                            value={credentials.password}
-                            onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                        />
-                    </div>
+        <div className="flex items-center justify-center min-h-screen">
+
+            <Card className="mx-auto max-w-sm my-auto">
+                <CardHeader>
+                    <CardTitle className="text-2xl">Login</CardTitle>
+                    <CardDescription>
+                        Enter your email below to login to your account
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid gap-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                placeholder="mail@example.com"
+                                value={credentials.username}
+                                required
+                                onChange={(e) => setCredentials({...credentials, username: e.target.value})}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Input
+                                placeholder="Password"
+                                type="password"
+                                required
+                                value={credentials.password}
+                                onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                            />
+                        </div>
                         {error && <p className="text-red-500">{error}</p>}
                         <Button onClick={handleLogin}>Login</Button>
                     </div>
@@ -65,8 +67,10 @@ const LoginPage = () => {
                             Sign up
                         </Link>
                     </div>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </div>
+
     );
 };
 

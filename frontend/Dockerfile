@@ -1,11 +1,8 @@
 ##### DEPENDENCIES
 
 FROM --platform=linux/amd64 node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl curl
 WORKDIR /app
-
-# Install Prisma Client - remove if not using Prisma
-COPY prisma ./
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -54,7 +51,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-EXPOSE 3000
-ENV PORT 3000
+EXPOSE 80
+ENV PORT 80
 
 CMD ["node", "server.js"]

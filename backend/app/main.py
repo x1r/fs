@@ -1,134 +1,76 @@
-from typing import List
 import json
-from fastapi import FastAPI, Depends, status, HTTPException, APIRouter
+
+from fastapi import FastAPI, Depends, HTTPException, APIRouter
+from fastapi import Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from . import models, schemas, crud
+from .auth import create_access_token, get_current_user, verify_password
 from .database import engine, Base, get_db
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from .auth import create_access_token, get_current_user, get_password_hash, verify_password
-from fastapi.middleware.cors import CORSMiddleware
-
-from .schemas import ClientOrdersPayments, WarehouseEquipment, EmployeeTasks
-from .models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 
 api_router = APIRouter()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Укажите фронтенд-URL
-    allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы (GET, POST, PUT, DELETE и т.д.)
-    allow_headers=["*"],  # Разрешить все заголовки
-)
-
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:80/"], allow_credentials=True, allow_methods=["*"],
+                   allow_headers=["*"], )
 
 Base.metadata.create_all(bind=engine)
 
 
-
-
-def setup_crud_routes(app, name, model, schema, schema_create, allowed_roles=None):
-    allowed_roles = allowed_roles or ["manager", "admin", "technician", "warehouse_staff"]
-
-    @app.post(f"/{name}/", response_model=schema)
-    def create_item(
-        item: schema_create,
-        db: Session = Depends(get_db),
-    ):
+def setup_crud_routes(api, name, model, schema, schema_create):
+    @api.post(f"/{name}/", response_model=schema)
+    def create_item(item: schema_create, db: Session = Depends(get_db), ):
         return crud.create_entity(db=db, model=model, schema=item)
 
-    @app.get(f"/{name}/", response_model=list[schema])
-    def read_items(
-        skip: int = 0,
-        limit: int = 50,
-        db: Session = Depends(get_db),
-    ):
+    @api.get(f"/{name}/", response_model=list[schema])
+    def read_items(skip: int = 0, limit: int = 50, db: Session = Depends(get_db), ):
         return crud.get_entities(db=db, model=model, skip=skip, limit=limit)
 
-    @app.get(f"/{name}/{{item_id}}", response_model=schema)
-    def read_item(
-        item_id: int,
-        db: Session = Depends(get_db),
-    ):
+    @api.get(f"/{name}/{{item_id}}", response_model=schema)
+    def read_item(item_id: int, db: Session = Depends(get_db), ):
         entity = crud.get_entity(db=db, model=model, entity_id=item_id)
         if not entity:
             raise HTTPException(status_code=404, detail=f"{name.capitalize()} not found")
         return entity
 
-    @app.put(f"/{name}/{{item_id}}", response_model=schema)
-    def update_item(
-        item_id: int,
-        item: schema_create,
-        db: Session = Depends(get_db),
-    ):
-        updated = crud.update_entity(db=db, model=model, entity_id=item_id, schema=item)
+    @api.patch(f"/{name}/{{item_id}}", response_model=schema)
+    def update_item_partial(item_id: int, item: schema_create, db: Session = Depends(get_db), ):
+        updated = crud.update_entity_partial(db=db, model=model, entity_id=item_id, schema=item)
         if not updated:
             raise HTTPException(status_code=404, detail=f"{name.capitalize()} not found")
         return updated
 
-    @app.delete(f"/{name}/{{item_id}}")
-    def delete_item(
-        item_id: int,
-        db: Session = Depends(get_db),
-    ):
+    @api.delete(f"/{name}/{{item_id}}")
+    def delete_item(item_id: int, db: Session = Depends(get_db), ):
         deleted = crud.delete_entity(db=db, model=model, entity_id=item_id)
         if not deleted:
             raise HTTPException(status_code=404, detail=f"{name.capitalize()} not found")
         return {"message": f"{name.capitalize()} deleted successfully"}
 
-
-# setup_crud_routes(app, "clients", models.Client, schemas.ClientRead, schemas.ClientCreate, ["manager", "admin"])
-setup_crud_routes(app, "orders", models.Order, schemas.OrderRead, schemas.OrderCreate, ["manager", "admin", "technician"])
-setup_crud_routes(app, "employees", models.Employee, schemas.EmployeeRead, schemas.EmployeeCreate, ["manager", "admin"])
-setup_crud_routes(app, "equipment", models.Equipment, schemas.EquipmentRead, schemas.EquipmentCreate, ["technician", "warehouse_staff", "manager", "admin"])
-setup_crud_routes(app, "tasks", models.Task, schemas.TaskRead, schemas.TaskCreate, ["technician", "manager", "admin"])
-setup_crud_routes(app, "warehouses", models.Warehouse, schemas.WarehouseRead, schemas.WarehouseCreate, ["warehouse_staff", "manager", "admin"])
-setup_crud_routes(app, "payments", models.Payment, schemas.PaymentRead, schemas.PaymentCreate, ["manager", "admin"])
-setup_crud_routes(app, "users", models.User, schemas.UserRead, schemas.UserCreate, ["manager", "admin"])
-setup_crud_routes(app, "audit_log", models.AuditLog, schemas.AuditLogRead, schemas.AuditLogCreate, ["manager", "admin"])
+    @api.get(f"/count/{name}/", response_model=int)
+    def get_count(db: Session = Depends(get_db)):
+        return crud.get_count(db=db, model=model)
 
 
-@app.get("/client-orders-payments", response_model=List[ClientOrdersPayments])
-def get_client_orders_payments(db: Session = Depends(get_db)):
-    result = db.execute("""
-        SELECT full_name, creation_date, status, equipment_type, amount, payment_date
-        FROM public.client_orders_payments
-    """).fetchall()
-    return [dict(row) for row in result]
+setup_crud_routes(app, "students", models.Student, schemas.StudentRead, schemas.StudentCreate)
+setup_crud_routes(app, "users", models.User, schemas.UserRead, schemas.UserCreate)
+# setup_crud_routes(app, "audit_log", models.AuditLog, schemas.AuditLogRead, schemas.AuditLogCreate)
 
-@app.get("/employee-tasks", response_model=List[EmployeeTasks])
-def get_employee_tasks(db: Session = Depends(get_db)):
-    result = db.execute("""
-        SELECT full_name, description, due_date, creation_date, client_name
-        FROM public.employee_tasks
-    """).fetchall()
-    return [dict(row) for row in result]
-
-@app.get("/warehouse-equipment", response_model=List[WarehouseEquipment])
-def get_warehouse_equipment(db: Session = Depends(get_db)):
-    result = db.execute("""
-        SELECT location, equipment_type, status, equipment_count
-        FROM public.warehouse_equipment
-    """).fetchall()
-    return [dict(row) for row in result]
 
 @app.get("/audit-logs/")
 def get_audit_logs(db: Session = Depends(get_db)):
     audit_logs = db.query(models.AuditLog).all()
     return [
-        {
-            "operation": log.operation,
-            "table_name": log.table_name,
-            "changed_data": json.dumps(log.changed_data, indent=2),  # Преобразование в строку
-            "changed_by": log.changed_by,
-            "timestamp": log.timestamp.isoformat() if log.timestamp else None,
-        }
-        for log in audit_logs
-    ]
+        {"operation": log.operation, "table_name": log.table_name,
+         "changed_data": json.dumps(log.changed_data, indent=2) if log.changed_data else None,
+         "changed_by": log.changed_by,
+         "timestamp": log.timestamp.isoformat() if log.timestamp else None, }
+        for log in audit_logs]
+
 
 # Регистрация пользователя
 @app.post("/register", response_model=schemas.UserRead)
@@ -141,8 +83,9 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/register")
-def register_page(db: Session = Depends(get_db)):
+def register_page():
     return {"message": "Register"}
+
 
 # Получение токена
 @app.post("/login")
@@ -155,6 +98,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token = create_access_token(data={"sub": user.username, "role": user.role})
     return {"access_token": access_token}
 
+
 # Защищённый эндпоинт
 @app.get("/me/", response_model=schemas.UserRead)
 def read_users_me(current_user: schemas.UserRead = Depends(get_current_user)):
@@ -162,17 +106,14 @@ def read_users_me(current_user: schemas.UserRead = Depends(get_current_user)):
 
 
 @app.get("/get_user_by_username")
-def get_user_by_username(username: str, db: Session = Depends(get_db)):
+def get_user_by_username(username: str = Query(...), db: Session = Depends(get_db)):
+    print(username)
     user = crud.get_user_by_username(db, username=username)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return {
-        "id": user.id,
-        "full_name": user.full_name,
-        "username": user.username,
-        "is_active": user.is_active,
-        "role": user.role
-    }
+    return {"id": user.id, "full_name": user.full_name, "username": user.username, "is_active": user.is_active,
+            "role": user.role}
+
 
 @app.get("/")
 def read_root():

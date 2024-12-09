@@ -2,7 +2,6 @@
 import {httpBatchLink} from "@trpc/client/links/httpBatchLink";
 import {loggerLink} from "@trpc/client/links/loggerLink";
 import {withTRPC} from "@trpc/next";
-import type {AppType} from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import type {AppRouter} from "../server/router";
 import "../styles/globals.css";
@@ -23,9 +22,11 @@ const MyApp = ({Component, pageProps}: AppProps<{ session: any }>) => {
                 enableSystem
                 disableTransitionOnChange
             >
-                <SessionProvider session={pageProps.session}>
-                    <Component {...pageProps} />
-                </SessionProvider>
+                {/*<SessionProvider session={pageProps.session}>*/}
+                    <div style={{fontFamily: inter.style.fontFamily}}>
+                        <Component {...pageProps} />
+                    </div>
+                {/*</SessionProvider>*/}
             </ThemeProvider>
         </main>
     );
@@ -38,7 +39,7 @@ const getBaseUrl = () => {
 };
 
 export default withTRPC<AppRouter>({
-    config({ctx}) {
+    config({}) {
 
         const url = `${getBaseUrl()}/api/trpc`;
 
@@ -53,7 +54,6 @@ export default withTRPC<AppRouter>({
             ],
             url,
             transformer: superjson,
-
         };
     },
 

@@ -1,12 +1,8 @@
 "use client"
 
-import {ChevronRight, type LucideIcon} from "lucide-react"
+import {AlertCircle, ChevronRight, type LucideIcon} from "lucide-react"
 
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import {Collapsible, CollapsibleContent, CollapsibleTrigger,} from "@/components/ui/collapsible"
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -17,6 +13,9 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip"
+
+import Link from "next/link";
 
 export function NavMain({
                             items,
@@ -57,9 +56,21 @@ export function NavMain({
                                     {item.items?.map((subItem) => (
                                         <SidebarMenuSubItem key={subItem.title}>
                                             <SidebarMenuSubButton asChild>
-                                                <a href={subItem.url}>
-                                                    <span>{subItem.title}</span>
-                                                </a>
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <Link href={subItem.url} className="text-muted">
+                                                                <span>{subItem.title}</span>
+                                                            </Link>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent className="flex items-center gap-2 p-2 rounded-md shadow-lg bg-muted">
+                                                            <AlertCircle size={18} className="text-yellow-500" />
+                                                            <span>Sorry, in development</span>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+
+
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
                                     ))}

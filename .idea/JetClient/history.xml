@@ -110,70 +110,6 @@
           <option name="workspaceId" value="drafts" />
         </requestHistoryState>
         <requestHistoryState>
-          <option name="dateTime" value="1732651436526" />
-          <option name="id" value="fb561393-a09f-4831-a5df-297e9fd65e71" />
-          <option name="request">
-            <requestState>
-              <option name="body">
-                <bodyState>
-                  <option name="type" value="FORM_URL_ENCODED" />
-                  <option name="urlEncoded">
-                    <list>
-                      <urlEncodedParameterState>
-                        <option name="key" value="username" />
-                        <option name="value" value="testuser" />
-                      </urlEncodedParameterState>
-                      <urlEncodedParameterState>
-                        <option name="key" value="password" />
-                        <option name="value" value="password" />
-                      </urlEncodedParameterState>
-                    </list>
-                  </option>
-                </bodyState>
-              </option>
-              <option name="id" value="a1a61693-0b08-4d04-9332-978efb2cd658" />
-              <option name="method" value="POST" />
-              <option name="name" value="Getting_token" />
-              <option name="url" value="http://127.0.0.1:8000/token" />
-            </requestState>
-          </option>
-          <option name="response">
-            <responseState>
-              <option name="bodyBytesBase64" value="eyJhY2Nlc3NfdG9rZW4iOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKemRXSWlPaUowWlhOMGRYTmxjaUlzSW1WNGNDSTZNVGN6TWpZMU16SXpObjAuZHhqZUxNZFhIS0IwRnkzTk1WWGVON0VSTm9iSjkxUHJTeVc4YjdBUWp4YyIsInRva2VuX3R5cGUiOiJiZWFyZXIifQ==" />
-              <option name="bodyString" value="{&#10;  &quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTczMjY1MzIzNn0.dxjeLMdXHKB0Fy3NMVXeN7ERNobJ91PrSyW8b7AQjxc&quot;,&#10;  &quot;token_type&quot;: &quot;bearer&quot;&#10;}" />
-              <option name="code" value="200" />
-              <option name="contentType" value="application/json" />
-              <option name="headers">
-                <list>
-                  <headerState>
-                    <option name="key" value="date" />
-                    <option name="value" value="Tue, 26 Nov 2024 20:03:55 GMT" />
-                  </headerState>
-                  <headerState>
-                    <option name="key" value="server" />
-                    <option name="value" value="uvicorn" />
-                  </headerState>
-                  <headerState>
-                    <option name="key" value="content-length" />
-                    <option name="value" value="169" />
-                  </headerState>
-                  <headerState>
-                    <option name="key" value="content-type" />
-                    <option name="value" value="application/json" />
-                  </headerState>
-                </list>
-              </option>
-              <option name="id" value="fb561393-a09f-4831-a5df-297e9fd65e71" />
-              <option name="message" value="OK" />
-              <option name="prettyResponseType" value="JSON" />
-              <option name="rawBodyString" value="{&quot;access_token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTczMjY1MzIzNn0.dxjeLMdXHKB0Fy3NMVXeN7ERNobJ91PrSyW8b7AQjxc&quot;,&quot;token_type&quot;:&quot;bearer&quot;}" />
-              <option name="size" value="169" />
-              <option name="time" value="245" />
-            </responseState>
-          </option>
-          <option name="workspaceId" value="drafts" />
-        </requestHistoryState>
-        <requestHistoryState>
           <option name="dateTime" value="1732651449785" />
           <option name="id" value="0c76d15c-9fd8-40fb-9a40-cbcdffcda965" />
           <option name="request">
@@ -181,9 +117,9 @@
               <option name="auth">
                 <authState>
                   <option name="bearer">
-                    <nE>
+                    <pA>
                       <option name="token" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTczMjY1MzIzNn0.dxjeLMdXHKB0Fy3NMVXeN7ERNobJ91PrSyW8b7AQjxc" />
-                    </nE>
+                    </pA>
                   </option>
                   <option name="type" value="BEARER" />
                 </authState>
@@ -838,6 +774,75 @@
               <option name="rawBodyString" value="{&quot;detail&quot;:&quot;Not Found&quot;}" />
               <option name="size" value="22" />
               <option name="time" value="32" />
+            </responseState>
+          </option>
+          <option name="workspaceId" value="drafts" />
+        </requestHistoryState>
+        <requestHistoryState>
+          <option name="dateTime" value="1733707363675" />
+          <option name="id" value="e1a98493-15b8-4e2e-9c52-39d81a690fcd" />
+          <option name="request">
+            <requestState>
+              <option name="body">
+                <bodyState>
+                  <option name="type" value="FORM_URL_ENCODED" />
+                  <option name="urlEncoded">
+                    <list>
+                      <urlEncodedParameterState>
+                        <option name="key" value="username" />
+                        <option name="value" value="test@x1r.dev" />
+                      </urlEncodedParameterState>
+                      <urlEncodedParameterState>
+                        <option name="key" value="password" />
+                        <option name="value" value="password" />
+                      </urlEncodedParameterState>
+                    </list>
+                  </option>
+                </bodyState>
+              </option>
+              <option name="id" value="a1a61693-0b08-4d04-9332-978efb2cd658" />
+              <option name="method" value="POST" />
+              <option name="name" value="Getting_token" />
+              <option name="url" value="http://localhost/api/login" />
+            </requestState>
+          </option>
+          <option name="response">
+            <responseState>
+              <option name="bodyBytesBase64" value="eyJhY2Nlc3NfdG9rZW4iOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKemRXSWlPaUowWlhOMFFIZ3hjaTVrWlhZaUxDSnliMnhsSWpvaWRYTmxjaUlzSW1WNGNDSTZNVGN6TXpjd09URTJNMzAuYklYN2szWFRqUld6WkRrMThhVHFSTjZrMTMwekVRYVMwOE9ncWNlQzEzOCJ9" />
+              <option name="bodyString" value="{&#10;  &quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHgxci5kZXYiLCJyb2xlIjoidXNlciIsImV4cCI6MTczMzcwOTE2M30.bIX7k3XTjRWzZDk18aTqRN6k130zEQaS08OgqceC138&quot;&#10;}" />
+              <option name="code" value="200" />
+              <option name="connectionEstablishingTime" value="156" />
+              <option name="contentType" value="application/json" />
+              <option name="headers">
+                <list>
+                  <headerState>
+                    <option name="key" value="Server" />
+                    <option name="value" value="nginx/1.27.3" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Date" />
+                    <option name="value" value="Mon, 09 Dec 2024 01:22:43 GMT" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Content-Type" />
+                    <option name="value" value="application/json" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Content-Length" />
+                    <option name="value" value="171" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Connection" />
+                    <option name="value" value="keep-alive" />
+                  </headerState>
+                </list>
+              </option>
+              <option name="id" value="e1a98493-15b8-4e2e-9c52-39d81a690fcd" />
+              <option name="message" value="OK" />
+              <option name="prettyResponseType" value="JSON" />
+              <option name="rawBodyString" value="{&quot;access_token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHgxci5kZXYiLCJyb2xlIjoidXNlciIsImV4cCI6MTczMzcwOTE2M30.bIX7k3XTjRWzZDk18aTqRN6k130zEQaS08OgqceC138&quot;}" />
+              <option name="size" value="171" />
+              <option name="time" value="406" />
             </responseState>
           </option>
           <option name="workspaceId" value="drafts" />

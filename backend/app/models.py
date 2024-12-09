@@ -1,93 +1,20 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Text, Date, DECIMAL, create_engine, Boolean, TIMESTAMP, \
+from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP, \
     JSON, text
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
 
-class Employee(Base):
-    __tablename__ = "employees"
-    employee_id = Column(Integer, primary_key=True, autoincrement=True)
-    full_name = Column(String(255), nullable=False)
-    position = Column(String(100))
-    phone = Column(String(50))
-    email = Column(String(255))
+class Student(Base):
+    __tablename__ = "students"
 
-    clients = relationship("Client", back_populates="responsible_employee_relation")
-    warehouses = relationship("Warehouse", back_populates="responsible_employee_relation")
-    tasks = relationship("Task", back_populates="employee_relation")
-
-
-class Client(Base):
-    __tablename__ = "clients"
-    client_id = Column(Integer, primary_key=True, autoincrement=True)
-    full_name = Column(String(255), nullable=False)
-    phone = Column(String(50))
-    email = Column(String(255))
-    address = Column(Text)
-    responsible_employee = Column(Integer, ForeignKey("employees.employee_id"))
-
-    responsible_employee_relation = relationship("Employee", back_populates="clients")
-    orders = relationship("Order", back_populates="client_relation")
-
-
-class Order(Base):
-    __tablename__ = "orders"
-    order_id = Column(Integer, primary_key=True, autoincrement=True)
-    creation_date = Column(Date)
-    status = Column(String(50))
-    client_id = Column(Integer, ForeignKey("clients.client_id"))
-    total_cost = Column(DECIMAL(10, 2))
-
-    client_relation = relationship("Client", back_populates="orders")
-    equipments = relationship("Equipment", back_populates="order_relation")
-    tasks = relationship("Task", back_populates="order_relation")
-    payments = relationship("Payment", back_populates="order_relation")
-
-
-class Warehouse(Base):
-    __tablename__ = "warehouses"
-    warehouse_id = Column(Integer, primary_key=True, autoincrement=True)
-    location = Column(Text)
-    responsible_employee = Column(Integer, ForeignKey("employees.employee_id"))
-
-    responsible_employee_relation = relationship("Employee", back_populates="warehouses")
-    equipments = relationship("Equipment", back_populates="warehouse_relation")
-
-
-class Equipment(Base):
-    __tablename__ = "equipments"
-    equipment_id = Column(Integer, primary_key=True, autoincrement=True)
-    equipment_type = Column(String(255))
-    serial_number = Column(String(255))
-    status = Column(String(50))
-    order_id = Column(Integer, ForeignKey("orders.order_id"))
-    warehouse_id = Column(Integer, ForeignKey("warehouses.warehouse_id"))
-
-    order_relation = relationship("Order", back_populates="equipments")
-    warehouse_relation = relationship("Warehouse", back_populates="equipments")
-
-
-class Task(Base):
-    __tablename__ = "tasks"
-    task_id = Column(Integer, primary_key=True, autoincrement=True)
-    description = Column(Text)
-    due_date = Column(Date)
-    order_id = Column(Integer, ForeignKey("orders.order_id"))
-    employee_id = Column(Integer, ForeignKey("employees.employee_id"))
-
-    order_relation = relationship("Order", back_populates="tasks")
-    employee_relation = relationship("Employee", back_populates="tasks")
-
-
-class Payment(Base):
-    __tablename__ = "payments"
-    payment_id = Column(Integer, primary_key=True, autoincrement=True)
-    amount = Column(DECIMAL(10, 2))
-    payment_date = Column(Date)
-    order_id = Column(Integer, ForeignKey("orders.order_id"))
-
-    order_relation = relationship("Order", back_populates="payments")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    last_name = Column(String(255), nullable=False)  # Фамилия
+    first_name = Column(String(255), nullable=False)  # Имя
+    middle_name = Column(String(255), nullable=True)  # Отчество
+    course = Column(Integer, nullable=False)  # Курс
+    group = Column(String(50), nullable=False)  # Группа
+    faculty = Column(String(255), nullable=False)  # Факультет
 
 
 class User(Base):

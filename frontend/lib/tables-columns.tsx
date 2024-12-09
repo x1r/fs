@@ -63,7 +63,17 @@ export const baseColumns = {
         {accessorKey: "changed_data", header: "Changed Data", id: "changed_data"},
         {accessorKey: "changed_by", header: "Changed By", id: "changed_by"},
         {accessorKey: "timestamp", header: "Date", id: "timestamp"},
+    ],
+    students: [
+        {accessorKey: "id", header: "ID", id: "id"},
+        {accessorKey: "last_name", header: "Last Name", id: "last_name"},
+        {accessorKey: "first_name", header: "First Name", id: "first_name"},
+        {accessorKey: "middle_name", header: "Middle Name", id: "middle_name"},
+        {accessorKey: "course", header: "Course", id: "course"},
+        {accessorKey: "group", header: "Group", id: "group"},
+        {accessorKey: "faculty", header: "Faculty", id: "faculty"}
     ]
+
 };
 
 
@@ -85,7 +95,10 @@ export const selectionColumn: ColumnDef<any> = {
     ),
 };
 
-export const actionsColumn = (onEdit: (row: any) => void, onDelete: (row: any) => void): ColumnDef<any> => ({
+export const actionsColumn = (
+    onEdit: (row: any) => void,
+    onDelete: (rows: any[]) => void // Accepts an array of rows
+): ColumnDef<any> => ({
     id: "actions",
     header: "Actions",
     cell: ({row}) => (
@@ -98,7 +111,7 @@ export const actionsColumn = (onEdit: (row: any) => void, onDelete: (row: any) =
             </button>
             <button
                 className="text-red-500 hover:underline"
-                onClick={() => onDelete(row.original)}
+                onClick={() => onDelete([row.original])} // Pass an array with a single row
             >
                 Delete
             </button>

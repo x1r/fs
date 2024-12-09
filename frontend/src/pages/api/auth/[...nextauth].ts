@@ -1,9 +1,7 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-
-import api from "@/src/utils/api";
+import {jwtDecode} from "jwt-decode";
 
 type DecodedToken = {
     sub: string;
@@ -15,8 +13,8 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text" },
-                password: { label: "Password", type: "password" },
+                username: {label: "Username", type: "text"},
+                password: {label: "Password", type: "password"},
             },
             async authorize(credentials) {
                 console.log("Credentials received:", credentials);
@@ -25,17 +23,18 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 try {
+                    console.log(process.env.NEXTAUTH_URL);
                     const response = await axios.post(
-                        "http://localhost/api/login",
+                        "http://localhost/fastapi/login",
                         new URLSearchParams({
                             username: credentials.username,
                             password: credentials.password,
                         }).toString(),
                         {
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            headers: {"Content-Type": "application/x-www-form-urlencoded"},
                         }
                     );
-                   const user = response.data;
+                    const user = response.data;
 
                     if (user && user.access_token) {
                         const decoded: DecodedToken = jwtDecode(user.access_token);
@@ -59,19 +58,19 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt" as const,
     },
     pages: {
-      signIn: "/api/login",
+        signIn: "/fastapi/login",
         error: "/auth/login"
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async jwt({ token, user }: { token: any; user?: any }) {
+        async jwt({token, user}: { token: any; user?: any }) {
             if (user) {
                 token.accessToken = user.access_token;
                 token.id = user.id;
             }
             return token;
         },
-        async session({ session, token }: { session: any; token: any }) {
+        async session({session, token}: { session: any; token: any }) {
             session.user = {
                 id: token.id,
                 accessToken: token.accessToken,

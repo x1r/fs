@@ -1,62 +1,38 @@
 "use client"
 
 import * as React from "react"
-import {
-    BookOpen,
-    Bot,
-    Briefcase,
-    Building,
-    ChartArea,
-    ClipboardList,
-    Contact,
-    CreditCard,
-    GalleryVerticalEnd,
-    ListTodo,
-    Package,
-    ScrollText,
-    Settings2,
-    SquareTerminal,
-    Users,
-} from "lucide-react"
+import {useEffect, useState} from "react"
+import {BookOpen, ChartArea, Contact, Settings2, Users,} from "lucide-react"
 
 import {NavMain} from "@/components/nav-main"
 import {NavTables} from "@/components/nav-tables"
 import {NavUser} from "@/components/nav-user"
 import {TeamSwitcher} from "@/components/team-switcher"
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarRail,
-} from "@/components/ui/sidebar"
+import {Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail,} from "@/components/ui/sidebar"
 import {useSession} from "next-auth/react";
-import api from "@/src/utils/api";
-import {headers} from "next/headers";
 import axios from "axios"
-import {useEffect, useState} from "react";
 
 const data = {
     teams: [
         {
-            name: "Company",
-            logo: GalleryVerticalEnd,
+            name: "University",
+            logo: BookOpen,
             plan: "Enterprise",
         },
     ],
     navMain: [
         {
-          title: "Analytics",
-          url: "#",
+            title: "Analytics",
+            url: "#",
             icon: ChartArea,
             items: [
                 {
                     title: "Views",
-                    url: "/dashboard/views",
+                    url: "#",
                 },
                 {
                     title: "Log",
-                    url: "/dashboard/log",
+                    url: "#",
                 }
             ]
         },
@@ -101,39 +77,9 @@ const data = {
     ],
     tables: [
         {
-            name: "Clients",
-            url: "/dashboard/clients",
+            name: "Students",
+            url: "/dashboard/students",
             icon: Contact,
-        },
-        {
-            name: "Orders",
-            url: "/dashboard/orders",
-            icon: ClipboardList,
-        },
-        {
-            name: "Employees",
-            url: "/dashboard/employees",
-            icon: Briefcase,
-        },
-        {
-            name: "Tasks",
-            url: "/dashboard/tasks",
-            icon: ListTodo,
-        },
-        {
-            name: "Warehouses",
-            url: "/dashboard/warehouses",
-            icon: Building,
-        },
-        {
-            name: "Equipments",
-            url: "/dashboard/equipment",
-            icon: Package,
-        },
-        {
-            name: "Payment",
-            url: "/dashboard/payments",
-            icon: CreditCard,
         },
         {
             name: "Users",
@@ -144,11 +90,11 @@ const data = {
 }
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
-    const {data: session, status} = useSession();
-
-    if (status === "unauthenticated") {
-        return null;
-    }
+    // const {data: session, status} = useSession();
+    //
+    // if (status === "unauthenticated") {
+    //     return null;
+    // }
 
 
     const [userData, setUserData] = useState<any>(null);
@@ -156,21 +102,29 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
 
     useEffect(() => {
         const fetchData = async () => {
+            // if (!session?.user?.email) {
+            //     console.error("No session email available.");
+            // }
+
             try {
-                const response = await axios.get("http://localhost/api/get_user_by_username", {
+                const response = await axios.get("http://localhost/fastapi/get_user_by_username", {
                 // @ts-ignore
-                    params: {username: session?.user?.id},
+                    params: { username: session?.user?.id },
                 });
                 setUserData(response.data);
             } catch (e) {
                 console.error("Error fetching user data:", e);
+                setUserData(
+                    {username: "test@us.er", full_name: "Test User"}
+                );
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, [session]);
+    // }, [session]);
+    }, []);
 
 
     return (
@@ -181,7 +135,9 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavTables tables={data.tables}/>
-                <NavMain items={data.navMain}/>
+                <div className="!text-muted">
+                    <NavMain items={data.navMain}/>
+                </div>
             </SidebarContent>
             <SidebarFooter>
                 <NavUser

@@ -1,36 +1,18 @@
 "use client"
 
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from "lucide-react"
+import {ChevronsUpDown, LogOut,} from "lucide-react"
 
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
+import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from "@/components/ui/sidebar"
-import {Button} from "@/components/ui/button";
-import router, {useRouter} from "next/router"
+import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,} from "@/components/ui/sidebar"
+import {useRouter} from "next/router"
 import {Badge} from "./ui/badge"
 import React from "react";
 import {signOut} from "next-auth/react";

@@ -1,47 +1,74 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-# dependencies
-/node_modules
-/frontend/node_modules
-/.pnp
-.pnp.js
-/.venv
-/frontend/.venv
+# C extensions
+*.so
 
-# testing
-/coverage
+# Virtual environment
+env/
+venv/
 
-# database
-/db
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
+# FastAPI specific
+instance/
+*.log
+*.pot
+*.pyc
+*.pyo
 
-# next.js
-/.next/
-/out/
+# Next.js specific
+.next/
+out/
+build/
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Node.js specific
+node_modules/
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# local env files
-.env
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
 *.tsbuildinfo
+
+# Docker specific
+*.env
+docker-compose.override.yml
+.dockerignore
+
+# Nginx specific
+*.crt
+*.key
+*.pem
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.sqlite3
+*.pid
+*.seed
+*.bak
+
+# Miscellaneous
+*.env.local
+*.env.development
+*.env.production
+*.env.test
+.env.*
+
+# Tests
+coverage/
+*.cover
+*.coverage
+*.coveragerc
 
 # jetclient
 /.jetclient

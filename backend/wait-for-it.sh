@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# wait-for-it.sh: Ожидает доступности указанного хоста и порта.
 
 set -e
 
@@ -14,5 +13,9 @@ until nc -z "$host" "$port"; do
   sleep 1
 done
 
->&2 echo "$host:$port is available. Starting application..."
+>&2 echo "$host:$port is available. Initializing the database..."
+
+python -c "from app.database import init_db; init_db()"
+
+>&2 echo "Database initialized. Starting the application..."
 exec $cmd

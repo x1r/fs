@@ -1,10 +1,12 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
 from datetime import datetime, timedelta
+
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from . import models, schemas, crud
+
+from . import crud
 from .database import get_db
 
 # Конфигурация
@@ -17,13 +19,16 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
 # Проверка пароля
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+
 # Хэширование пароля
 def get_password_hash(password):
     return pwd_context.hash(password)
+
 
 # Создание токена
 def create_access_token(data: dict, expires_delta: timedelta = None):
@@ -31,6 +36,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:

@@ -1,14 +1,54 @@
-.git
+# git & docker
+.git/
 .gitignore
-.vscode
-.idea
-.DS_Store
+Dockerfile*
+.dockerignore
 
-venv/
-*.pyo
+# Node.js
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyc
 
+# Virtual environments
+venv/
+env/
+
+# Logs
 *.log
-dump/
 
-docker-compose.override.yml
+# Next.js
+.next/
+out/
+build/
+
+# Static files that will be built in the container
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+# Temporary files
+*.swp
+*.tmp
+*.pid
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment files (they should be passed via Docker secrets or ENV)
+*.env
+*.env.*
+
+# Ignore test coverage and build artifacts
+coverage/
+*.coverage
+dist/

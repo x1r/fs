@@ -13,11 +13,14 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col space-y-4">
+              {/*<Button asChild className="w-full">*/}
+              {/*  <Link href="/auth/login">Login</Link>*/}
+              {/*</Button>*/}
+              {/*<Button variant="outline" asChild className="w-full">*/}
+              {/*  <Link href="/auth/register">Register</Link>*/}
+              {/*</Button>*/}
               <Button asChild className="w-full">
-                <Link href="/auth/login">Login</Link>
-              </Button>
-              <Button variant="outline" asChild className="w-full">
-                <Link href="/auth/register">Register</Link>
+                <Link href="/dashboard">Open Dashboard</Link>
               </Button>
             </div>
           </CardContent>
